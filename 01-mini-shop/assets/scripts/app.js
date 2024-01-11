@@ -1,8 +1,8 @@
 class Product {
-  title = "DEFAULT";
-  imageUrl;
-  price;
-  description;
+  // title = "DEFAULT";
+  // imageUrl;
+  // price;
+  // description;
 
   constructor(title, image, price, desc) {
     this.title = title;
@@ -12,8 +12,49 @@ class Product {
   }
 }
 
-const productList = {
-  products: [
+class ShoppingCart {
+  items = [];
+
+  render() {
+    const cartEl = document.createElement("section");
+    cartEl.innerHTML = `
+    <h2>Total: \$${0} </h2>
+    <button>Order Now!</button>
+    `;
+    cartEl.className = "cart";
+    return cartEl;
+  }
+}
+
+class ProductItem {
+  constructor(product) {
+    this.product = product;
+  }
+  addToCart() {
+    console.log(this.product);
+  }
+  render() {
+    const prodEl = document.createElement("li");
+    prodEl.className = "product-item";
+    prodEl.innerHTML = `
+      <div>
+      <img src='${this.product.imageUrl}' alt="${this.product.title}">
+      <div class="product-item__content">
+      <h2>${this.product.title}</h2>
+      <h3>\$${this.product.price}</h3>
+      <p>${this.product.description}</p>
+      <button>Add to Cart</button>
+      </div>
+      </div>
+      `;
+    const addCartButton = prodEl.querySelector("button");
+    addCartButton.addEventListener("click", this.addToCart.bind(this));
+    return prodEl;
+  }
+}
+
+class ProductList {
+  products = [
     new Product(
       "A Book",
       "https://cdn.pixabay.com/photo/2017/02/26/21/39/rose-2101475_1280.jpg",
@@ -70,30 +111,36 @@ const productList = {
     //   price: 29.99,
     //   description: "A blanket just for you!",
     // },
-  ],
+  ];
+  constructor() {}
+
   render() {
     const renderHook = document.getElementById("app");
     const prodList = document.createElement("ul");
-    productList.className = "product-list";
+    prodList.className = "product-list";
 
-    for (const product of this.products) {
-      const prodEl = document.createElement("li");
-      prodEl.className = "product-item";
-      prodEl.innerHTML = `
-        <div>
-        <img src='${product.imageUrl}' alt="${product.title}">
-        <div class="product-item__content">
-        <h2>${product.title}</h2>
-        <h3>\$${product.price}</h3>
-        <p>${product.description}</p>
-        <button>Add to Cart</button>
-        </div>
-        </div>
-        `;
+    for (const prod of this.products) {
+      const productItem = new ProductItem(prod);
+      const prodEl = productItem.render();
       prodList.append(prodEl);
     }
-    renderHook.append(prodList);
-  },
-};
+    return prodList;
+  }
+}
 
-productList.render();
+class Shop {
+  render() {
+    const renderHook = document.getElementById("app");
+    const cart = new ShoppingCart();
+    const cartEl = cart.render();
+
+    const productList = new ProductList();
+    const prodListEl = productList.render();
+
+    renderHook.append(cartEl);
+    renderHook.append(prodListEl);
+  }
+}
+
+const shop = new Shop();
+shop.render();
