@@ -57,13 +57,13 @@ class Person {
 // userA.__proto__ === User.prototype; // true
 // userA.__proto__ === User.__proto__ // false
 
-// const p = new Person();
-// const p2 = new Person();
-// p.greet();
-// console.log(p);
+const p = new Person();
+const p2 = new Person();
+p.greet();
+console.log(p);
 
-// const button = document.getElementById("btn");
-// button.addEventListener("click", p.greet.bind(p));
+const button = document.getElementById("btn");
+button.addEventListener("click", p.greet.bind(p));
 
 const course = {
   // new Object();
