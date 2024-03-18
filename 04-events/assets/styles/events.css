@@ -35,3 +35,22 @@ button:active {
   border-color: #e92f6d;
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.26);
 }
+
+#long-one {
+  height: 1000px;
+  background-color: rgb(195, 247, 144);
+}
+
+li {
+  padding: 1rem;
+  border: 1px solid #93888b;
+}
+
+ul {
+  list-style: none;
+}
+
+.highlight {
+  background-color: red;
+  color: white;
+}
