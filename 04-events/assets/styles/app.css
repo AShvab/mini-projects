@@ -40,6 +40,7 @@ ul {
 
 li {
   margin: 1rem 0;
+ 
 }
 
 section {
@@ -89,7 +90,14 @@ button:active {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
   padding: 1rem;
   background: white;
+  border: 1px solid #870099;
+  user-select: none;
 }
+
+.droppable{
+  background: #fb90b9;
+}
+
 
 #active-projects {
   border: 1px solid #870099;
@@ -124,3 +132,4 @@ button:active {
   color: white;
   margin: 0;
 }
+
