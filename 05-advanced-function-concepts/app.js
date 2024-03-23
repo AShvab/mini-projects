@@ -5,6 +5,8 @@ function add(num1, num2) {
 console.log(add(1, 5));
 console.log(add(10, 50));
 
+// ========================================================
+
 // impure function:
 function addRandom(num1) {
   return num1 + Math.random();
@@ -27,6 +29,7 @@ function printHobbies(h) {
 }
 printHobbies(hobbies);
 
+// ========================================================
 // factory functions:
 
 let multiplier = 1.1;
@@ -47,6 +50,8 @@ multiplier = 1.2;
 console.log(calculateVatAmount(100));
 console.log(calculateVatAmount(200));
 
+
+// =============================================================
 let userName = "Anna";
 function greetUser() {
   let name = "Max";
@@ -73,24 +78,68 @@ function powerOf(x, n) {
   //   return x
   // }
   // return x * powerOf(x, n - 1);
-  return n===1 ? x : powerOf(x, n - 1);
+  return n === 1 ? x : powerOf(x, n - 1);
 }
 console.log(powerOf(2, 3));
 
-const myself ={
+const myself = {
   name: "Anna",
-  friends:[
+  friends: [
     {
       name: "Manuel",
-      friends:[
+      friends: [
         {
-          name:"John",
-        }
-      ]
+          name: "John",
+          friends: [{ name: "Kate" }],
+        },
+      ],
     },
     {
       name: "Julia",
-      
-    }
-  ]
+    },
+  ],
+};
+
+function getFriendNames(person) {
+  const collectedNames = [];
+
+  if (!person.friends) {
+    return [];
+  }
+  for (friend of person.friends) {
+    collectedNames.push(friend.name);
+    collectedNames.push(...getFriendNames(friend));
+    getFriendNames(friend);
+  }
+  return collectedNames;
 }
+console.log(getFriendNames(myself));
+
+// =================================================
+function randomIntBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) + min);
+}
+console.log(randomIntBetween(7, 15));
+
+// ==================================================
+
+function productDescription(strings, productName, productPrice) {
+  console.log(strings);
+  console.log(productName);
+  console.log(productPrice);
+  let priceCategory = "pretty cheap regarding its price";
+  if (productPrice > 20) {
+    priceCategory = "fairy priced";
+    return {
+      name: productName,
+      price: productPrice,
+      category: priceCategory,
+    };
+  }
+}
+
+const prodName = "JS course";
+const prodPrice = 29.99
+
+const productOutput = productDescription`This product(${prodName}) is ${prodPrice}`
+console.log(productOutput)
