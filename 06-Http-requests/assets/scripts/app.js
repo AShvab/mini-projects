@@ -5,41 +5,64 @@ const fetchButton = document.querySelector("#available-posts button");
 const postList = document.querySelector("ul");
 
 function sendHttpRequest(method, url, data) {
-  const promise = new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+  // const promise = new Promise((resolve, reject) => {
+  // const xhr = new XMLHttpRequest();
 
-    xhr.open(method, url);
+  // xhr.open(method, url);
 
-    xhr.responseType = "json";
+  // xhr.responseType = "json";
 
-    xhr.onload = function () {
-      if(xhr.status>=200 && xhr.status <300){
-        resolve(xhr.response);
-      }else{
-        reject(new Error('Something went wrong'))
+  // xhr.onload = function () {
+  //   if(xhr.status>=200 && xhr.status <300){
+  //     resolve(xhr.response);
+  //   }else{
+  //     reject(new Error('Something went wrong'))
+  //   }
+
+  //   // const listOfPosts = JSON.parse(xhr.response)
+  // };
+
+  // xhr.onerror = function () {
+  //   reject(new Error('Failed to send request'))
+  //   // console.log(xhr.response);
+  //   // console.log(xhr.status)
+  // }
+
+  // xhr.send(JSON.stringify(data));
+
+  // });
+  // return promise;
+  return fetch(url, {
+    method: method,
+    // body: JSON.stringify(data),
+    body: data,
+    // headers: {
+    //   "Content-Type": "application/json",
+    // },
+  })
+    .then((response) => {
+      if (response.status >= 200 && response.status < 300) {
+        return response.json();
+      } else {
+        return response.json().then((errData) => {
+          console.log(errData);
+          throw new Error("Something went wrong - server-side error");
+        });
       }
-      
-      // const listOfPosts = JSON.parse(xhr.response)
-    };
-
-    xhr.onerror = function () {
-      reject(new Error('Failed to send request'))
-      // console.log(xhr.response);
-      // console.log(xhr.status)
-    }
-
-    xhr.send(JSON.stringify(data));
-  });
-  return promise;
+    })
+    .catch((error) => {
+      console.log(error);
+      throw new Error("Something went wrong");
+    });
 }
 
 async function fetchPosts() {
-  try{
+  try {
     const responseData = await sendHttpRequest(
       "GET",
       "https://jsonplaceholder.typicode.com/posts"
     );
-  
+
     const listOfPosts = responseData;
     console.log(listOfPosts);
     for (const post of listOfPosts) {
@@ -49,10 +72,9 @@ async function fetchPosts() {
       postEl.querySelector("li").id = post.id;
       listElement.append(postEl);
     }
-  }catch(error){
+  } catch (error) {
     alert(error.message);
   }
-  
 }
 
 async function createPost(title, content) {
@@ -62,7 +84,13 @@ async function createPost(title, content) {
     body: content,
     userId: userId,
   };
-  sendHttpRequest("POST", "https://jsonplaceholder.typicode.com/posts", post);
+
+  const fd = new FormData(form);
+  // fd.append("title", title);
+  // fd.append("body", content);
+  fd.append("userId", userId);
+
+  sendHttpRequest("POST", "https://jsonplaceholder.typicode.com/posts", fd);
 }
 
 fetchButton.addEventListener("click", fetchPosts);
@@ -74,10 +102,13 @@ form.addEventListener("submit", (event) => {
   createPost(enteredTitle, enteredContent);
 });
 
-postList.addEventListener("click", event =>{
-  if(event.target.tagName === "BUTTON"){
-   const postId = event.target.closest('li').id
-  sendHttpRequest('DELETE', `https://jsonplaceholder.typicode.com/posts/${postId}`);
-  console.log('Open Network to see result')
+postList.addEventListener("click", (event) => {
+  if (event.target.tagName === "BUTTON") {
+    const postId = event.target.closest("li").id;
+    sendHttpRequest(
+      "DELETE",
+      `https://jsonplaceholder.typicode.com/posts/${postId}`
+    );
+    console.log("Open Network to see the result");
   }
-} )
+});
